@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
+import { fetchMovies } from '@/services/movieService'
 import type { Movie } from '@/types/movie'
 import SearchBar from '../SearchBar'
 import Loader from '../Loader'
 import ErrorMessage from '../ErrorMessage'
 import MovieGrid from '../MovieGrid'
-import { fetchMovies } from '@/services/movieService'
 import MovieModal from '../MovieModal'
 // import css from './App.module.css'
 
@@ -76,7 +76,7 @@ export default function App() {
 			{isLoading && <Loader />}
 			{isError && <ErrorMessage />}
 			{hasMovies && <MovieGrid movies={movies} onSelect={openModal} />}
-			{activeMovieIdx && isModalOpen && (
+			{isModalOpen && activeMovieIdx !== undefined && (
 				<MovieModal movie={movies[activeMovieIdx]} onClose={closeModal} />
 			)}
 			<div>
