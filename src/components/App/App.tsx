@@ -7,7 +7,7 @@ import Loader from '../Loader'
 import ErrorMessage from '../ErrorMessage'
 import MovieGrid from '../MovieGrid'
 import MovieModal from '../MovieModal'
-// import css from './App.module.css'
+import css from './App.module.css'
 
 export default function App() {
 	const [movies, setMovies] = useState<Movie[]>([])
