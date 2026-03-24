@@ -1,17 +1,19 @@
-// import { fetchMovies } from '@/services/movieService'
-
-import toast, { Toaster } from 'react-hot-toast'
-import SearchBar from '../SearchBar'
 import { useEffect, useState } from 'react'
+import toast, { Toaster } from 'react-hot-toast'
 import type { Movie } from '@/types/movie'
-import { fetchMovies } from '@/services/movieService'
-import css from './App.module.css'
+import SearchBar from '../SearchBar'
 import Loader from '../Loader'
 import ErrorMessage from '../ErrorMessage'
+import MovieGrid from '../MovieGrid'
+import { fetchMovies } from '@/services/movieService'
+import MovieModal from '../MovieModal'
+// import css from './App.module.css'
 
 export default function App() {
 	const [movies, setMovies] = useState<Movie[]>([])
+	const [activeMovieIdx, setActiveMovieIdx] = useState<number>()
 	const [query, setQuery] = useState<string>('')
+	const [isModalOpen, setIsModalOpen] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
 	const [isError, setIsError] = useState(false)
 
@@ -45,6 +47,16 @@ export default function App() {
 		}
 	}
 
+	const openModal = (idx: number) => {
+		setActiveMovieIdx(idx)
+		setIsModalOpen(true)
+	}
+
+	const closeModal = () => {
+		setActiveMovieIdx(undefined)
+		setIsModalOpen(false)
+	}
+
 	useEffect(() => {
 		if (!query.trim()) return
 
@@ -56,17 +68,16 @@ export default function App() {
 		}
 	}, [query])
 
+	const hasMovies = movies.length > 0
+
 	return (
-		<div className={css.app}>
+		<>
 			<SearchBar onSubmit={handleSubmit} />
 			{isLoading && <Loader />}
 			{isError && <ErrorMessage />}
-			{movies.length > 0 && (
-				<ul>
-					{movies.map((movie) => (
-						<li key={movie.id}>{movie.title}</li>
-					))}
-				</ul>
+			{hasMovies && <MovieGrid movies={movies} onSelect={openModal} />}
+			{activeMovieIdx && isModalOpen && (
+				<MovieModal movie={movies[activeMovieIdx]} onClose={closeModal} />
 			)}
 			<div>
 				<Toaster
@@ -88,7 +99,7 @@ export default function App() {
 					}}
 				/>
 			</div>
-		</div>
+		</>
 	)
 }
 
