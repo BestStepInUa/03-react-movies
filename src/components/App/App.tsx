@@ -7,6 +7,7 @@ import Loader from '../Loader'
 import ErrorMessage from '../ErrorMessage'
 import MovieGrid from '../MovieGrid'
 import MovieModal from '../MovieModal'
+import css from './App.module.css'
 
 export default function App() {
 	const [movies, setMovies] = useState<Movie[]>([])
@@ -71,8 +72,9 @@ export default function App() {
 	const hasMovies = movies.length > 0
 
 	return (
-		<>
+		<div className={css.app}>
 			<SearchBar onSubmit={handleSubmit} />
+
 			{isLoading && <Loader />}
 			{isError && <ErrorMessage />}
 			{hasMovies && <MovieGrid movies={movies} onSelect={openModal} />}
@@ -99,7 +101,7 @@ export default function App() {
 					}}
 				/>
 			</div>
-		</>
+		</div>
 	)
 }
 
