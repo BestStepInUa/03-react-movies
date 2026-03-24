@@ -11,7 +11,7 @@ import css from './App.module.css'
 
 export default function App() {
 	const [movies, setMovies] = useState<Movie[]>([])
-	const [activeMovie, setActiveMovie] = useState<Movie>()
+	const [activeMovie, setActiveMovie] = useState<Movie | null>(null)
 	const [query, setQuery] = useState<string>('')
 	const [isModalOpen, setIsModalOpen] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
@@ -54,7 +54,7 @@ export default function App() {
 	}
 
 	const closeModal = () => {
-		setActiveMovie(undefined)
+		setActiveMovie(null)
 		setIsModalOpen(false)
 	}
 
