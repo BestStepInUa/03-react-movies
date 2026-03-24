@@ -17,11 +17,12 @@ const api = axios.create({
 	},
 })
 
-export const fetchMovies = async (query: string): Promise<Movie[]> => {
+export const fetchMovies = async (query: string, signal?: AbortSignal): Promise<Movie[]> => {
 	const { data } = await api.get<MoviesHttpResponse>('', {
 		params: {
 			query,
 		},
+		signal,
 	})
 	return data.results
 }

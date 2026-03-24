@@ -19,19 +19,25 @@ export default function App() {
 		setQuery(query)
 	}
 
-	const handleSearch = async (query: string) => {
+	const handleSearch = async (query: string, signal?: AbortSignal) => {
 		try {
 			setIsLoading(true)
 			setIsError(false)
 
-			const movies = await fetchMovies(query)
+			const movies = await fetchMovies(query, signal)
 
 			if (movies.length === 0)
 				toast.error('No movies found for your request.', { id: 'unique-toast' })
 			else toast.success('Successfully loaded movies.', { id: 'unique-toast' })
 
 			setMovies(movies)
-		} catch {
+		} catch (error) {
+			const isCanceled =
+				error instanceof Error &&
+				(error.name === 'CanceledError' || (error as { code?: string }).code === 'ERR_CANCELED')
+
+			if (isCanceled) return
+
 			setIsError(true)
 			toast.error('Whoops, something went wrong! Please try again!', { id: 'unique-toast' })
 		} finally {
@@ -41,7 +47,13 @@ export default function App() {
 
 	useEffect(() => {
 		if (!query.trim()) return
-		void handleSearch(query)
+
+		const controller = new AbortController()
+		void handleSearch(query, controller.signal)
+
+		return () => {
+			controller.abort()
+		}
 	}, [query])
 
 	return (
