@@ -17,6 +17,7 @@ export default function App() {
 	const [isError, setIsError] = useState(false)
 
 	const handleSubmit = (query: string) => {
+		setMovies([])
 		setQuery(query)
 	}
 
