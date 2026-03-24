@@ -3,22 +3,22 @@ import css from './MovieGrid.module.css'
 
 interface MovieGridProps {
 	movies: Movie[]
-	onSelect: (idx: number) => void
+	onSelect: (movie: Movie) => void
 }
 
 export default function MovieGrid({ movies, onSelect }: MovieGridProps) {
 	return (
 		<ul className={css.grid}>
-			{movies.map(({ id, title, poster_path }, idx) => (
-				<li key={id} onClick={() => onSelect(idx)}>
+			{movies.map((movie) => (
+				<li key={movie.id} onClick={() => onSelect(movie)}>
 					<div className={css.card}>
 						<img
 							className={css.image}
-							src={`https://image.tmdb.org/t/p/w500${poster_path}`}
-							alt={title}
+							src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+							alt={movie.title}
 							loading='lazy'
 						/>
-						<h2 className={css.title}>{title}</h2>
+						<h2 className={css.title}>{movie.title}</h2>
 					</div>
 				</li>
 			))}

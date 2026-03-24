@@ -11,7 +11,7 @@ import css from './App.module.css'
 
 export default function App() {
 	const [movies, setMovies] = useState<Movie[]>([])
-	const [activeMovieIdx, setActiveMovieIdx] = useState<number>()
+	const [activeMovie, setActiveMovie] = useState<Movie>()
 	const [query, setQuery] = useState<string>('')
 	const [isModalOpen, setIsModalOpen] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
@@ -48,13 +48,13 @@ export default function App() {
 		}
 	}
 
-	const openModal = (idx: number) => {
-		setActiveMovieIdx(idx)
+	const openModal = (movie: Movie) => {
+		setActiveMovie(movie)
 		setIsModalOpen(true)
 	}
 
 	const closeModal = () => {
-		setActiveMovieIdx(undefined)
+		setActiveMovie(undefined)
 		setIsModalOpen(false)
 	}
 
@@ -78,9 +78,7 @@ export default function App() {
 			{isLoading && <Loader />}
 			{isError && <ErrorMessage />}
 			{hasMovies && <MovieGrid movies={movies} onSelect={openModal} />}
-			{isModalOpen && activeMovieIdx !== undefined && (
-				<MovieModal movie={movies[activeMovieIdx]} onClose={closeModal} />
-			)}
+			{isModalOpen && activeMovie && <MovieModal movie={activeMovie} onClose={closeModal} />}
 			<div>
 				<Toaster
 					position='top-center'
