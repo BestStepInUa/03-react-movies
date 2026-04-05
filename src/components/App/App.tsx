@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import { fetchMovies } from '@/services/movieService'
 import type { Movie } from '@/types/movie'
@@ -12,22 +12,21 @@ import css from './App.module.css'
 export default function App() {
 	const [movies, setMovies] = useState<Movie[]>([])
 	const [activeMovie, setActiveMovie] = useState<Movie | null>(null)
-	const [query, setQuery] = useState<string>('')
 	const [isModalOpen, setIsModalOpen] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
 	const [isError, setIsError] = useState(false)
 
-	const handleSubmit = (query: string) => {
+	const handleSubmit = async (query: string) => {
 		setMovies([])
-		setQuery(query)
+		await handleSearch(query)
 	}
 
-	const handleSearch = async (query: string, signal?: AbortSignal) => {
+	const handleSearch = async (query: string) => {
 		try {
 			setIsLoading(true)
 			setIsError(false)
 
-			const movies = await fetchMovies(query, signal)
+			const movies = await fetchMovies(query)
 
 			if (movies.length === 0)
 				toast.error('No movies found for your request.', { id: 'unique-toast' })
@@ -57,17 +56,6 @@ export default function App() {
 		setActiveMovie(null)
 		setIsModalOpen(false)
 	}
-
-	useEffect(() => {
-		if (!query.trim()) return
-
-		const controller = new AbortController()
-		void handleSearch(query, controller.signal)
-
-		return () => {
-			controller.abort()
-		}
-	}, [query])
 
 	const hasMovies = movies.length > 0
 
